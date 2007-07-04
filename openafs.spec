@@ -1,6 +1,6 @@
 %define name    openafs
 %define version 1.4.4
-%define release %mkrel 1
+%define release %mkrel 2
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
@@ -113,6 +113,7 @@ This packages provides the documentation for OpenAFS.
 chmod 644 doc/html/QuickStartWindows/*.htm
 
 %build
+%serverbuild
 %ifarch x86_64
 %define sysname amd64_linux26
 %else
