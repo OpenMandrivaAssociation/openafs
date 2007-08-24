@@ -1,6 +1,6 @@
 %define name    openafs
 %define version 1.4.4
-%define release %mkrel 3
+%define release %mkrel 4
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
@@ -19,6 +19,7 @@ Source1:        http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-
 Source2:        http://grand.central.org/dl/cellservdb/CellServDB
 Source3:        openafs.init
 Source4:        openafs.config
+Source5:        openafs-server.init
 Patch0:         patch-linux-2.6.22-v2
 Patch1:         STABLE14-linux-posix-lock-file-has-wait-arg-now-20070517
 BuildRequires:  pam-devel
@@ -153,6 +154,7 @@ install -m 644 %{SOURCE2}  %{buildroot}%{_sysconfdir}/%{name}/CellServDB
 install -m 755 -d %{buildroot}%{_initrddir}
 install -m 755 -d %{buildroot}%{_sysconfdir}/sysconfig
 install -m 755 %{SOURCE3} %{buildroot}%{_initrddir}/%{name}
+install -m 755 %{SOURCE5} %{buildroot}%{_initrddir}/%{name}-server
 install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 
 # kernel module
@@ -303,6 +305,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 
 %files server
 %defattr(-,root,root)
+%{_initrddir}/%{name}-server
 %{_sbindir}/bosserver
 %{_sbindir}/kadb_check
 %{_sbindir}/kdb
