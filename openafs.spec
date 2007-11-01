@@ -1,6 +1,6 @@
 %define name    openafs
-%define version 1.4.4
-%define release %mkrel 4
+%define version 1.4.5
+%define release %mkrel 1
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
@@ -20,8 +20,6 @@ Source2:        http://grand.central.org/dl/cellservdb/CellServDB
 Source3:        openafs.init
 Source4:        openafs.config
 Source5:        openafs-server.init
-Patch0:         patch-linux-2.6.22-v2
-Patch1:         STABLE14-linux-posix-lock-file-has-wait-arg-now-20070517
 BuildRequires:  pam-devel
 BuildRequires:  ncurses-devel
 BuildRequires:  flex
@@ -113,8 +111,6 @@ This packages provides the documentation for OpenAFS.
 %prep
 %setup -q -T -b 0
 %setup -q -T -D -b 1
-%patch0 -p 0
-%patch1 -p 1
 chmod 644 doc/html/QuickStartWindows/*.htm
 
 %build
@@ -124,12 +120,6 @@ chmod 644 doc/html/QuickStartWindows/*.htm
 %else
 %define sysname %{_arch}_linux26
 %endif
-
-aclocal -I src/cf
-autoconf
-autoconf configure-libafs.in > configure-libafs
-chmod +x configure-libafs
-autoheader
 
 %configure \
 	--disable-kernel-module \
@@ -307,9 +297,9 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %defattr(-,root,root)
 %{_initrddir}/%{name}-server
 %{_sbindir}/bosserver
+%{_sbindir}/ka-forwarder
 %{_sbindir}/kadb_check
 %{_sbindir}/kdb
-%{_sbindir}/kseal
 %{_sbindir}/kpwvalid
 %{_sbindir}/prdb_check
 %{_sbindir}/pt_util
