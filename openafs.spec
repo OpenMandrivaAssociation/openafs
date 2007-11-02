@@ -4,7 +4,8 @@
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
-%define libname %mklibname %{name} %{major}
+%define libname     %mklibname %{name} %{major}
+%define develname	%mklibname %{name} -d
 %define _requires_exceptions libafsrpc.so
 
 Name:           %{name}
@@ -71,18 +72,18 @@ Group:          System/Libraries
 
 %description -n	%{libname}
 This package contains the libraries needed to run programs dynamically
-linked with OpenAFS libraries.
+linked with %{name}.
 
-%package -n %{libname}-devel
-Summary:        Static libraries and header files for OpenAFS
-Group:          Development/C
-Provides:       %{name}-devel = %{version}-%{release}
-Provides:       lib%{name}-devel = %{version}-%{release}
-Requires:       %{libname} = %{version}
-Conflicts:      %mklibname -d lwp 2
-Conflicts:      %mklibname -d rplay
+%package -n %{develname}
+Summary:    Static libraries and header files for %{name}
+Group:      Development/C
+Requires:	%{libname} = %{version}-%{release}
+Provides:	%{name}-devel = %{version}-%{release}
+Obsoletes:  %mklibname -d %name 1
+Conflicts:  %mklibname -d lwp 2
+Conflicts:  %mklibname -d rplay
 
-%description -n	%{libname}-devel
+%description -n	%{develname}
 This package contains the static development libraries and headers needed
 to compile applications linked with OpenAFS libraries.
 
@@ -323,7 +324,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %defattr(-,root,root)
 %{_libdir}/*.so.*
 
-%files -n %{libname}-devel
+%files -n %{develname}
 %defattr(-,root,root)
 %multiarch %{multiarch_bindir}/rxgen
 %multiarch %{multiarch_bindir}/xstat_cm_test
