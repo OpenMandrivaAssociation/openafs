@@ -12,7 +12,7 @@ Version:        %{version}
 Release:        %{release}
 Summary:        OpenAFS distributed filesystem
 Group:          Networking/Other
-License:        IBM Public License
+License:        IBM
 URL:            http://openafs.org/
 Source0:        http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-src.tar.bz2
 Source1:        http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-doc.tar.bz2
