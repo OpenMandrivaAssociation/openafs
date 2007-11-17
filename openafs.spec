@@ -1,6 +1,6 @@
 %define name    openafs
 %define version 1.4.5
-%define release %mkrel 2
+%define release %mkrel 3
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
