@@ -29,7 +29,6 @@ BuildRequires:  krb5-devel
 Requires:       kmod(libafs)
 Conflicts:      krbafs-utils
 Conflicts:      coda-debug-backup
-BuildRoot:      %{_tmppath}/%{name}-%{version}
 
 %description
 AFS is a distributed filesystem allowing cross-platform sharing of files
