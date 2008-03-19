@@ -1,6 +1,6 @@
 %define name    openafs
 %define version 1.4.6
-%define release %mkrel 1
+%define release %mkrel 2
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
@@ -21,6 +21,12 @@ Source2:        http://grand.central.org/dl/cellservdb/CellServDB
 Source3:        openafs.init
 Source4:        openafs.config
 Source5:        openafs-server.init
+Patch0:         openafs-1.4.6-linux-afs-unlinked-file-dentry-flagging-20071031.patch
+Patch1:         openafs-1.4.6-linux-nsec-timestamp-zero-20071106.patch
+Patch2:         openafs-1.4.6-linux-splice-support-20071106.patch
+Patch3:         openafs-1.4.6-linux-2624-20071123.patch
+Patch4:         openafs-1.4.6-linux-try-kbuild-deal-with-old-modpost-20071127.patch
+Patch5:         openafs-1.4.6-linux24-kernel-configure-test-20071208.patch
 BuildRequires:  pam-devel
 BuildRequires:  ncurses-devel
 BuildRequires:  flex
@@ -112,6 +118,12 @@ This packages provides the documentation for OpenAFS.
 %prep
 %setup -q -T -b 0
 %setup -q -T -D -b 1
+%patch0 -p 1
+%patch1 -p 1
+%patch2 -p 1
+%patch3 -p 1
+%patch4 -p 1
+%patch5 -p 1
 chmod 644 doc/html/QuickStartWindows/*.htm
 
 %build
@@ -121,6 +133,12 @@ chmod 644 doc/html/QuickStartWindows/*.htm
 %else
 %define sysname %{_arch}_linux26
 %endif
+
+aclocal -I src/cf
+autoconf
+autoconf configure-libafs.in > configure-libafs
+chmod +x configure-libafs
+autoheader
 
 %configure \
 	--disable-kernel-module \
