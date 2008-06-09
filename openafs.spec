@@ -209,9 +209,13 @@ perl -pi -e 's|%{_builddir}/%{name}-%{version}/src|../..|' \
 %clean
 rm -rf %{buildroot}
 
+%if %mdkversion < 200900
 %post -n %{libname} -p /sbin/ldconfig
+%endif
 
+%if %mdkversion < 200900
 %postun -n %{libname} -p /sbin/ldconfig
+%endif
 
 %post client
 %_post_service %{name}
