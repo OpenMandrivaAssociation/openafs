@@ -1,6 +1,6 @@
 %define name    openafs
 %define version 1.4.7
-%define release %mkrel 2
+%define release %mkrel 3
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
@@ -194,9 +194,12 @@ rm %{buildroot}%{_bindir}/compile_et
 
 # rename binaries and man page to avoid some conflicts
 mv %{buildroot}%{_bindir}/kpasswd{,.afs}
+mv %{buildroot}%{_bindir}/pagsh{,.afs}
 mv %{buildroot}%{_bindir}/up{,.afs}
 mv %{buildroot}%{_mandir}/man1/kpasswd.1 \
     %{buildroot}%{_mandir}/man1/kpasswd.afs.1
+mv %{buildroot}%{_mandir}/man1/pagsh.1 \
+    %{buildroot}%{_mandir}/man1/pagsh.afs.1
 mv %{buildroot}%{_mandir}/man1/up.1 \
     %{buildroot}%{_mandir}/man1/up.afs.1
 mv %{buildroot}%{_mandir}/man8/upclient.8 \
@@ -248,7 +251,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_bindir}/aklog
 %{_bindir}/knfs
 %{_bindir}/livesys
-%{_bindir}/pagsh
+%{_bindir}/pagsh.afs
 %{_bindir}/pagsh.krb
 %{_bindir}/pts
 %{_bindir}/scout
@@ -275,7 +278,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_mandir}/man1/klog.1*
 %{_mandir}/man1/knfs.1*
 %{_mandir}/man1/livesys.1*
-%{_mandir}/man1/pagsh.1*
+%{_mandir}/man1/pagsh.afs.1*
 %{_mandir}/man1/pts.1*
 %{_mandir}/man1/scout.1*
 %{_mandir}/man1/sys.1*
@@ -357,7 +360,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %exclude %{_mandir}/man1/klog.1*
 %exclude %{_mandir}/man1/knfs.1*
 %exclude %{_mandir}/man1/livesys.1*
-%exclude %{_mandir}/man1/pagsh.1*
+%exclude %{_mandir}/man1/pagsh.afs.1*
 %exclude %{_mandir}/man1/pts.1*
 %exclude %{_mandir}/man1/scout.1*
 %exclude %{_mandir}/man1/sys.1*
