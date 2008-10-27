@@ -1,6 +1,6 @@
 %define name    openafs
 %define version 1.4.7
-%define release %mkrel 4
+%define release %mkrel 5
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
@@ -21,8 +21,9 @@ Source2:        http://grand.central.org/dl/cellservdb/CellServDB
 Source3:        openafs.init
 Source4:        openafs.config
 Source5:        openafs-server.init
-Patch0:         STABLE14-linux-2-6-27-20080816.patch
-Patch1:         STABLE14-autoconf-262-support-20081020.patch
+Patch0:         STABLE14-linux-2626-support-20080608.patch
+Patch1:         STABLE14-linux-2-6-27-20080816.patch
+Patch2:         STABLE14-autoconf-262-support-20081020.patch
 BuildRequires:  pam-devel
 BuildRequires:  ncurses-devel
 BuildRequires:  flex
@@ -116,6 +117,7 @@ This packages provides the documentation for OpenAFS.
 %setup -q -T -D -b 1
 %patch0 -p 1
 %patch1 -p 1
+%patch2 -p 1
 chmod 644 doc/html/QuickStartWindows/*.htm
 
 aclocal -I src/cf
