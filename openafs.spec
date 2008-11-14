@@ -1,6 +1,6 @@
 %define name    openafs
-%define version 1.4.7
-%define release %mkrel 5
+%define version 1.4.8
+%define release %mkrel 1
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
@@ -21,9 +21,6 @@ Source2:        http://grand.central.org/dl/cellservdb/CellServDB
 Source3:        openafs.init
 Source4:        openafs.config
 Source5:        openafs-server.init
-Patch0:         STABLE14-linux-2626-support-20080608.patch
-Patch1:         STABLE14-linux-2-6-27-20080816.patch
-Patch2:         STABLE14-autoconf-262-support-20081020.patch
 BuildRequires:  pam-devel
 BuildRequires:  ncurses-devel
 BuildRequires:  flex
@@ -115,16 +112,13 @@ This packages provides the documentation for OpenAFS.
 %prep
 %setup -q -T -b 0
 %setup -q -T -D -b 1
-%patch0 -p 1
-%patch1 -p 1
-%patch2 -p 1
 chmod 644 doc/html/QuickStartWindows/*.htm
 
-aclocal -I src/cf
-autoconf
-autoconf configure-libafs.in > configure-libafs
-chmod +x configure-libafs
-autoheader
+#aclocal -I src/cf
+#autoconf
+#autoconf configure-libafs.in > configure-libafs
+#chmod +x configure-libafs
+#autoheader
 
 %build
 %serverbuild
@@ -260,6 +254,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_bindir}/kpwvalid
 %{_bindir}/klog
 %{_bindir}/klog.krb
+%{_bindir}/klog.krb5
 %{_bindir}/aklog
 %{_bindir}/knfs
 %{_bindir}/livesys
