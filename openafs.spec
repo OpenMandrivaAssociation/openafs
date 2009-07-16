@@ -1,5 +1,5 @@
 %define name    openafs
-%define version 1.4.10
+%define version 1.4.11
 %define release %mkrel 1
 %define dkms_version %{version}-%{release}
 %define module  libafs
@@ -29,7 +29,7 @@ BuildRequires:  krb5-devel
 Requires:       kmod(libafs)
 Conflicts:      krbafs-utils
 Conflicts:      coda-debug-backup
-BuildRoot:      %{_tmppath}/%{name}-%{version}
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 AFS is a distributed filesystem allowing cross-platform sharing of files
