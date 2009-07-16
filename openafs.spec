@@ -272,7 +272,6 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_sbindir}/backup
 %{_sbindir}/bos_util
 %{_sbindir}/butc
-%{_sbindir}/copyauth
 %{_sbindir}/fms
 %{_sbindir}/fstrace
 %{_sbindir}/kas
