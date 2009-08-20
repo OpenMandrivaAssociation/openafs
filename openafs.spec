@@ -1,6 +1,6 @@
 %define name    openafs
 %define version 1.4.11
-%define release %mkrel 1
+%define release %mkrel 2
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
@@ -229,8 +229,8 @@ rm -rf %{buildroot}
 
 %post client
 %_post_service %{name}
-if [ ! -e /mnt/afs ]; then
-	mkdir /mnt/afs
+if [ ! -e /afs ]; then
+	mkdir /afs
 fi
 
 %preun client
