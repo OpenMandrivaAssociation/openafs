@@ -216,6 +216,9 @@ mv %{buildroot}%{_mandir}/man8/upclient.8 \
 perl -pi -e 's|%{_builddir}/%{name}-%{version}/src|../..|' \
     %{buildroot}%{_prefix}/src/libafs-%{version}-%{release}/src/config/Makefile.version
 
+touch %{buildroot}%{_sysconfdir}/openafs/ThisCell
+chmod 644 %{buildroot}%{_sysconfdir}/openafs/ThisCell
+
 %clean
 rm -rf %{buildroot}
 
@@ -300,6 +303,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %files client
 %defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/%{name}
+%config(noreplace) %ghost %{_sysconfdir}/%{name}/ThisCell
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initrddir}/%{name}
 %{_bindir}/cmdebug
