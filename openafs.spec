@@ -190,9 +190,6 @@ rm %{buildroot}%{_sbindir}/kdump
 #rm %{buildroot}%{_libdir}/pam_afs.krb.so.1
 #rm %{buildroot}%{_libdir}/pam_afs.so.1
 
-# e2fsprogs-devel has one of these.
-rm %{buildroot}%{_bindir}/compile_et
-
 %multiarch_binaries %{buildroot}%{_bindir}/rxgen
 %multiarch_binaries %{buildroot}%{_bindir}/xstat_cm_test
 %multiarch_binaries %{buildroot}%{_bindir}/xstat_fs_test
@@ -250,17 +247,18 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %files
 %defattr(-,root,root,-)
 %doc README NEWS src/LICENSE
-%{_bindir}/asetkey
+%{_bindir}/afs_compile_et
 %{_bindir}/afsmonitor
+%{_bindir}/aklog
+%{_bindir}/asetkey
 %{_bindir}/bos
 %{_bindir}/fs
-%{_bindir}/kpasswd.afs
-%{_bindir}/kpwvalid
 %{_bindir}/klog
 %{_bindir}/klog.krb
 %{_bindir}/klog.krb5
-%{_bindir}/aklog
 %{_bindir}/knfs
+%{_bindir}/kpasswd.afs
+%{_bindir}/kpwvalid
 %{_bindir}/livesys
 %{_bindir}/pagsh.afs
 %{_bindir}/pagsh.krb
