@@ -112,7 +112,6 @@ This packages provides the documentation for OpenAFS.
 %prep
 %setup -q -T -b 0
 %setup -q -T -D -b 1
-#%patch -p 0
 chmod 644 doc/html/QuickStartWindows/*.htm
 
 #aclocal -I src/cf
