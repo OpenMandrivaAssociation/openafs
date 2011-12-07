@@ -1,6 +1,7 @@
+
 %define name    openafs
-%define version 1.4.14
-%define release %mkrel 2
+%define version 1.4.14.1
+%define release %mkrel 3
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
@@ -29,7 +30,6 @@ BuildRequires:  krb5-devel
 Requires:       kmod(libafs)
 Conflicts:      krbafs-utils
 Conflicts:      coda-debug-backup
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 AFS is a distributed filesystem allowing cross-platform sharing of files
@@ -222,14 +222,6 @@ chmod 644 %{buildroot}%{_sysconfdir}/openafs/ThisCell
 %clean
 rm -rf %{buildroot}
 
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
-
 %post client
 %_post_service %{name}
 if [ ! -e /afs ]; then
@@ -345,18 +337,22 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 
 %files -n %{develname}
 %defattr(-,root,root)
-%{multiarch_bindir}/rxgen
-%{multiarch_bindir}/xstat_cm_test
-%{multiarch_bindir}/xstat_fs_test
+
+%multiarch %{multiarch_bindir}/rxgen
+
+%multiarch %{multiarch_bindir}/xstat_cm_test
+
+%multiarch %{multiarch_bindir}/xstat_fs_test
+
 %{_bindir}/rxgen
 %{_bindir}/xstat_cm_test
 %{_bindir}/xstat_fs_test
 %{_includedir}/*.h
 %{_includedir}/afs
 %{_includedir}/rx
-%dir %{multiarch_includedir}/afs
-%{multiarch_includedir}/afs/dirpath.h
-%{multiarch_includedir}/afs/param.h
+
+%multiarch %{multiarch_includedir}/afs
+
 %{_libdir}/*.so
 %{_libdir}/*.a
 %{_libdir}/afs
@@ -368,290 +364,29 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %files doc
 %defattr(-,root,root)
 %doc doc/LICENSE doc/pdf doc/txt doc/examples
-%{_mandir}/man1/afs.1*
-%{_mandir}/man1/afs_compile_et.1*
-%{_mandir}/man1/aklog.1*
-%{_mandir}/man1/cmdebug.1*
-%{_mandir}/man1/copyauth.1*
-%{_mandir}/man1/dlog.1*
-%{_mandir}/man1/dpass.1*
-%{_mandir}/man1/fs_apropos.1*
-%{_mandir}/man1/fs_checkservers.1*
-%{_mandir}/man1/fs_checkvolumes.1*
-%{_mandir}/man1/fs_cleanacl.1*
-%{_mandir}/man1/fs_copyacl.1*
-%{_mandir}/man1/fs_cscpolicy.1*
-%{_mandir}/man1/fs_diskfree.1*
-%{_mandir}/man1/fs_examine.1*
-%{_mandir}/man1/fs_exportafs.1*
-%{_mandir}/man1/fs_flush.1*
-%{_mandir}/man1/fs_flushall.1*
-%{_mandir}/man1/fs_flushmount.1*
-%{_mandir}/man1/fs_flushvolume.1*
-%{_mandir}/man1/fs_getcacheparms.1*
-%{_mandir}/man1/fs_getcalleraccess.1*
-%{_mandir}/man1/fs_getcellstatus.1*
-%{_mandir}/man1/fs_getclientaddrs.1*
-%{_mandir}/man1/fs_getcrypt.1*
-%{_mandir}/man1/fs_getfid.1*
-%{_mandir}/man1/fs_getserverprefs.1*
-%{_mandir}/man1/fs_help.1*
-%{_mandir}/man1/fs_listacl.1*
-%{_mandir}/man1/fs_listaliases.1*
-%{_mandir}/man1/fs_listcells.1*
-%{_mandir}/man1/fs_listquota.1*
-%{_mandir}/man1/fs_lsmount.1*
-%{_mandir}/man1/fs_memdump.1*
-%{_mandir}/man1/fs_messages.1*
-%{_mandir}/man1/fs_minidump.1*
-%{_mandir}/man1/fs_mkmount.1*
-%{_mandir}/man1/fs_monitor.1*
-%{_mandir}/man1/fs_newalias.1*
-%{_mandir}/man1/fs_newcell.1*
-%{_mandir}/man1/fs_quota.1*
-%{_mandir}/man1/fs_rmmount.1*
-%{_mandir}/man1/fs_rxstatpeer.1*
-%{_mandir}/man1/fs_rxstatproc.1*
-%{_mandir}/man1/fs_setacl.1*
-%{_mandir}/man1/fs_setcachesize.1*
-%{_mandir}/man1/fs_setcbaddr.1*
-%{_mandir}/man1/fs_setcell.1*
-%{_mandir}/man1/fs_setclientaddrs.1*
-%{_mandir}/man1/fs_setcrypt.1*
-%{_mandir}/man1/fs_setquota.1*
-%{_mandir}/man1/fs_setserverprefs.1*
-%{_mandir}/man1/fs_setvol.1*
-%{_mandir}/man1/fs_storebehind.1*
-%{_mandir}/man1/fs_sysname.1*
-%{_mandir}/man1/fs_trace.1*
-%{_mandir}/man1/fs_uuid.1*
-%{_mandir}/man1/fs_whereis.1*
-%{_mandir}/man1/fs_whichcell.1*
-%{_mandir}/man1/fs_wscell.1*
-%{_mandir}/man1/klog.krb.1*
-%{_mandir}/man1/klog.krb5.1*
-%{_mandir}/man1/package_test.1*
-%{_mandir}/man1/pts_adduser.1*
-%{_mandir}/man1/pts_apropos.1*
-%{_mandir}/man1/pts_chown.1*
-%{_mandir}/man1/pts_creategroup.1*
-%{_mandir}/man1/pts_createuser.1*
-%{_mandir}/man1/pts_delete.1*
-%{_mandir}/man1/pts_examine.1*
-%{_mandir}/man1/pts_help.1*
-%{_mandir}/man1/pts_interactive.1*
-%{_mandir}/man1/pts_listentries.1*
-%{_mandir}/man1/pts_listmax.1*
-%{_mandir}/man1/pts_listowned.1*
-%{_mandir}/man1/pts_membership.1*
-%{_mandir}/man1/pts_quit.1*
-%{_mandir}/man1/pts_removeuser.1*
-%{_mandir}/man1/pts_rename.1*
-%{_mandir}/man1/pts_setfields.1*
-%{_mandir}/man1/pts_setmax.1*
-%{_mandir}/man1/pts_sleep.1*
-%{_mandir}/man1/pts_source.1*
-%{_mandir}/man1/rxgen.1*
-%{_mandir}/man1/symlink.1*
-%{_mandir}/man1/symlink_list.1*
-%{_mandir}/man1/symlink_make.1*
-%{_mandir}/man1/symlink_remove.1*
-%{_mandir}/man1/tokens.krb.1*
-%{_mandir}/man1/vos_addsite.1*
-%{_mandir}/man1/vos_apropos.1*
-%{_mandir}/man1/vos_backup.1*
-%{_mandir}/man1/vos_backupsys.1*
-%{_mandir}/man1/vos_changeaddr.1*
-%{_mandir}/man1/vos_changeloc.1*
-%{_mandir}/man1/vos_clone.1*
-%{_mandir}/man1/vos_convertROtoRW.1*
-%{_mandir}/man1/vos_copy.1*
-%{_mandir}/man1/vos_create.1*
-%{_mandir}/man1/vos_delentry.1*
-%{_mandir}/man1/vos_dump.1*
-%{_mandir}/man1/vos_examine.1*
-%{_mandir}/man1/vos_help.1*
-%{_mandir}/man1/vos_listaddrs.1*
-%{_mandir}/man1/vos_listpart.1*
-%{_mandir}/man1/vos_listvldb.1*
-%{_mandir}/man1/vos_listvol.1*
-%{_mandir}/man1/vos_lock.1*
-%{_mandir}/man1/vos_move.1*
-%{_mandir}/man1/vos_offline.1*
-%{_mandir}/man1/vos_online.1*
-%{_mandir}/man1/vos_partinfo.1*
-%{_mandir}/man1/vos_release.1*
-%{_mandir}/man1/vos_remove.1*
-%{_mandir}/man1/vos_remsite.1*
-%{_mandir}/man1/vos_rename.1*
-%{_mandir}/man1/vos_restore.1*
-%{_mandir}/man1/vos_setfields.1*
-%{_mandir}/man1/vos_shadow.1*
-%{_mandir}/man1/vos_size.1*
-%{_mandir}/man1/vos_status.1*
-%{_mandir}/man1/vos_syncserv.1*
-%{_mandir}/man1/vos_syncvldb.1*
-%{_mandir}/man1/vos_unlock.1*
-%{_mandir}/man1/vos_unlockvldb.1*
-%{_mandir}/man1/vos_zap.1*
-%{_mandir}/man1/xstat_cm_test.1*
-%{_mandir}/man1/xstat_fs_test.1*
-%{_mandir}/man5/AuthLog.5*
-%{_mandir}/man5/AuthLog.dir.5*
-%{_mandir}/man5/BackupLog.5*
-%{_mandir}/man5/BosConfig.5*
-%{_mandir}/man5/BosLog.5*
-%{_mandir}/man5/CellAlias.5*
-%{_mandir}/man5/CellServDB.5*
-%{_mandir}/man5/FORCESALVAGE.5*
-%{_mandir}/man5/FileLog.5*
-%{_mandir}/man5/KeyFile.5*
-%{_mandir}/man5/NetInfo.5*
-%{_mandir}/man5/NetRestrict.5*
-%{_mandir}/man5/NoAuth.5*
-%{_mandir}/man5/SALVAGE.fs.5*
-%{_mandir}/man5/SalvageLog.5*
-%{_mandir}/man5/ThisCell.5*
-%{_mandir}/man5/UserList.5*
-%{_mandir}/man5/VLLog.5*
-%{_mandir}/man5/VolserLog.5*
-%{_mandir}/man5/afs.5*
-%{_mandir}/man5/afs_cache.5*
-%{_mandir}/man5/afs_volume_header.5*
-%{_mandir}/man5/afsmonitor.5*
-%{_mandir}/man5/afszcm.cat.5*
-%{_mandir}/man5/bdb.DB0.5*
-%{_mandir}/man5/butc.5*
-%{_mandir}/man5/butc_logs.5*
-%{_mandir}/man5/cacheinfo.5*
-%{_mandir}/man5/fms.log.5*
-%{_mandir}/man5/kaserver.DB0.5*
-%{_mandir}/man5/kaserverauxdb.5*
-%{_mandir}/man5/krb.conf.5*
-%{_mandir}/man5/package.5*
-%{_mandir}/man5/prdb.DB0.5*
-%{_mandir}/man5/salvage.lock.5*
-%{_mandir}/man5/sysid.5*
-%{_mandir}/man5/tapeconfig.5*
-%{_mandir}/man5/uss.5*
-%{_mandir}/man5/uss_bulk.5*
-%{_mandir}/man5/vldb.DB0.5*
-%{_mandir}/man8/afsd.8*
-%{_mandir}/man8/asetkey.8*
-%{_mandir}/man8/backup.8*
-%{_mandir}/man8/backup_adddump.8*
-%{_mandir}/man8/backup_addhost.8*
-%{_mandir}/man8/backup_addvolentry.8*
-%{_mandir}/man8/backup_addvolset.8*
-%{_mandir}/man8/backup_apropos.8*
-%{_mandir}/man8/backup_dbverify.8*
-%{_mandir}/man8/backup_deldump.8*
-%{_mandir}/man8/backup_deletedump.8*
-%{_mandir}/man8/backup_delhost.8*
-%{_mandir}/man8/backup_delvolentry.8*
-%{_mandir}/man8/backup_delvolset.8*
-%{_mandir}/man8/backup_diskrestore.8*
-%{_mandir}/man8/backup_dump.8*
-%{_mandir}/man8/backup_dumpinfo.8*
-%{_mandir}/man8/backup_help.8*
-%{_mandir}/man8/backup_interactive.8*
-%{_mandir}/man8/backup_jobs.8*
-%{_mandir}/man8/backup_kill.8*
-%{_mandir}/man8/backup_labeltape.8*
-%{_mandir}/man8/backup_listdumps.8*
-%{_mandir}/man8/backup_listhosts.8*
-%{_mandir}/man8/backup_listvolsets.8*
-%{_mandir}/man8/backup_quit.8*
-%{_mandir}/man8/backup_readlabel.8*
-%{_mandir}/man8/backup_restoredb.8*
-%{_mandir}/man8/backup_savedb.8*
-%{_mandir}/man8/backup_scantape.8*
-%{_mandir}/man8/backup_setexp.8*
-%{_mandir}/man8/backup_status.8*
-%{_mandir}/man8/backup_volinfo.8*
-%{_mandir}/man8/backup_volrestore.8*
-%{_mandir}/man8/backup_volsetrestore.8*
-%{_mandir}/man8/bos.8*
-%{_mandir}/man8/bos_addhost.8*
-%{_mandir}/man8/bos_addkey.8*
-%{_mandir}/man8/bos_adduser.8*
-%{_mandir}/man8/bos_apropos.8*
-%{_mandir}/man8/bos_create.8*
-%{_mandir}/man8/bos_delete.8*
-%{_mandir}/man8/bos_exec.8*
-%{_mandir}/man8/bos_getdate.8*
-%{_mandir}/man8/bos_getlog.8*
-%{_mandir}/man8/bos_getrestart.8*
-%{_mandir}/man8/bos_help.8*
-%{_mandir}/man8/bos_install.8*
-%{_mandir}/man8/bos_listhosts.8*
-%{_mandir}/man8/bos_listkeys.8*
-%{_mandir}/man8/bos_listusers.8*
-%{_mandir}/man8/bos_prune.8*
-%{_mandir}/man8/bos_removehost.8*
-%{_mandir}/man8/bos_removekey.8*
-%{_mandir}/man8/bos_removeuser.8*
-%{_mandir}/man8/bos_restart.8*
-%{_mandir}/man8/bos_salvage.8*
-%{_mandir}/man8/bos_setauth.8*
-%{_mandir}/man8/bos_setcellname.8*
-%{_mandir}/man8/bos_setrestart.8*
-%{_mandir}/man8/bos_shutdown.8*
-%{_mandir}/man8/bos_start.8*
-%{_mandir}/man8/bos_startup.8*
-%{_mandir}/man8/bos_status.8*
-%{_mandir}/man8/bos_stop.8*
-%{_mandir}/man8/bos_uninstall.8*
-%{_mandir}/man8/bos_util.8*
-%{_mandir}/man8/buserver.8*
-%{_mandir}/man8/butc.8*
-%{_mandir}/man8/fileserver.8*
-%{_mandir}/man8/fms.8*
-%{_mandir}/man8/fstrace.8*
-%{_mandir}/man8/fstrace_apropos.8*
-%{_mandir}/man8/fstrace_clear.8*
-%{_mandir}/man8/fstrace_dump.8*
-%{_mandir}/man8/fstrace_help.8*
-%{_mandir}/man8/fstrace_lslog.8*
-%{_mandir}/man8/fstrace_lsset.8*
-%{_mandir}/man8/fstrace_setlog.8*
-%{_mandir}/man8/fstrace_setset.8*
-%{_mandir}/man8/ka-forwarder.8*
-%{_mandir}/man8/kas.8*
-%{_mandir}/man8/kas_apropos.8*
-%{_mandir}/man8/kas_create.8*
-%{_mandir}/man8/kas_delete.8*
-%{_mandir}/man8/kas_examine.8*
-%{_mandir}/man8/kas_forgetticket.8*
-%{_mandir}/man8/kas_help.8*
-%{_mandir}/man8/kas_interactive.8*
-%{_mandir}/man8/kas_list.8*
-%{_mandir}/man8/kas_listtickets.8*
-%{_mandir}/man8/kas_noauthentication.8*
-%{_mandir}/man8/kas_quit.8*
-%{_mandir}/man8/kas_setfields.8*
-%{_mandir}/man8/kas_setpassword.8*
-%{_mandir}/man8/kas_statistics.8*
-%{_mandir}/man8/kas_stringtokey.8*
-%{_mandir}/man8/kas_unlock.8*
-%{_mandir}/man8/kaserver.8*
-%{_mandir}/man8/package.8*
-%{_mandir}/man8/pt_util.8*
-%{_mandir}/man8/ptserver.8*
-%{_mandir}/man8/read_tape.8*
-%{_mandir}/man8/restorevol.8*
-%{_mandir}/man8/rmtsysd.8*
-%{_mandir}/man8/salvager.8*
-%{_mandir}/man8/upclient.afs.8*
-%{_mandir}/man8/upserver.8*
-%{_mandir}/man8/uss.8*
-%{_mandir}/man8/uss_add.8*
-%{_mandir}/man8/uss_apropos.8*
-%{_mandir}/man8/uss_bulk.8*
-%{_mandir}/man8/uss_delete.8*
-%{_mandir}/man8/uss_help.8*
-%{_mandir}/man8/vldb_convert.8*
-%{_mandir}/man8/vlserver.8*
-%{_mandir}/man8/volserver.8*
-%{_mandir}/man8/vsys.8*
-%{_mandir}/man8/xfs_size_check.8*
+%{_mandir}/man?/*
+%exclude %{_mandir}/man1/afsmonitor.1*
+%exclude %{_mandir}/man1/fs.1*
+%exclude %{_mandir}/man1/klog.1*
+%exclude %{_mandir}/man1/knfs.1*
+%exclude %{_mandir}/man1/livesys.1*
+%exclude %{_mandir}/man1/pagsh.afs.1*
+%exclude %{_mandir}/man1/pts.1*
+%exclude %{_mandir}/man1/scout.1*
+%exclude %{_mandir}/man1/sys.1*
+%exclude %{_mandir}/man1/tokens.1*
+%exclude %{_mandir}/man1/translate_et.1*
+%exclude %{_mandir}/man1/udebug.1*
+%exclude %{_mandir}/man1/unlog.1*
+%exclude %{_mandir}/man1/rxdebug.1*
+%exclude %{_mandir}/man1/vos.1*
+%exclude %{_mandir}/man1/up.afs.1*
+%exclude %{_mandir}/man1/kpasswd.afs.1*
+%exclude %{_mandir}/man8/bosserver.8*
+%exclude %{_mandir}/man8/kadb_check.8*
+%exclude %{_mandir}/man8/kdb.8*
+%exclude %{_mandir}/man8/kpwvalid.8*
+%exclude %{_mandir}/man8/prdb_check.8*
+%exclude %{_mandir}/man8/vldb_check.8*
+%exclude %{_mandir}/man8/voldump.8*
+%exclude %{_mandir}/man8/volinfo.8*
