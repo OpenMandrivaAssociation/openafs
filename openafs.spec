@@ -1,7 +1,7 @@
 
 %define name    openafs
 %define version 1.6.0
-%define release %mkrel 1
+%define release 2
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
@@ -185,8 +185,8 @@ EOF
 
 # we don't use these.... Red Hat has its own pam_krb5afs modules.
 # maybe in the future, we could configure these instead....
-#rm %{buildroot}%{_libdir}/pam_afs.krb.so.1
-#rm %{buildroot}%{_libdir}/pam_afs.so.1
+rm %{buildroot}%{_libdir}/pam_afs.krb.so.1
+rm %{buildroot}%{_libdir}/pam_afs.so.1
 
 %multiarch_binaries %{buildroot}%{_bindir}/rxgen
 
@@ -270,7 +270,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_sbindir}/fssync-debug
 %{_sbindir}/salvsync-debug
 %{_sbindir}/state_analyzer
-#%{_sbindir}/afsd.fuse
+%{_sbindir}/afsd.fuse
 %{_sbindir}/bos_util
 %{_sbindir}/butc
 %{_sbindir}/fms
