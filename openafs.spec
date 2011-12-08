@@ -270,7 +270,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_sbindir}/fssync-debug
 %{_sbindir}/salvsync-debug
 %{_sbindir}/state_analyzer
-%{_sbindir}/afsd.fuse
+#%{_sbindir}/afsd.fuse
 %{_sbindir}/bos_util
 %{_sbindir}/butc
 %{_sbindir}/fms
