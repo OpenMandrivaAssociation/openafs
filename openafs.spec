@@ -1,7 +1,7 @@
 
 %define name    openafs
-%define version 1.4.14.1
-%define release %mkrel 3
+%define version 1.6.0
+%define release %mkrel 1
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
@@ -112,7 +112,7 @@ This packages provides the documentation for OpenAFS.
 %prep
 %setup -q -T -b 0
 %setup -q -T -D -b 1
-chmod 644 doc/html/QuickStartWindows/*.htm
+#chmod 644 doc/html/QuickStartWindows/*.htm
 
 #aclocal -I src/cf
 #autoconf
@@ -178,11 +178,10 @@ EOF
 
 # DCE security system stuff -- wasn't included before -- is this
 # of use to anyone?
-rm %{buildroot}%{_bindir}/dlog
-rm %{buildroot}%{_bindir}/dpass
+#rm %{buildroot}%{_bindir}/dpass
 
 # this is coming out 0 bytes. And it wasn't getting packaged before.
-rm %{buildroot}%{_sbindir}/kdump
+# rm %{buildroot}%{_sbindir}/kdump
 
 # we don't use these.... Red Hat has its own pam_krb5afs modules.
 # maybe in the future, we could configure these instead....
@@ -265,17 +264,23 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_bindir}/translate_et
 %{_bindir}/udebug
 %{_bindir}/unlog
+%{_bindir}/restorevol
 %{_sbindir}/backup
+%{_sbindir}/dafssync-debug
+%{_sbindir}/fssync-debug
+%{_sbindir}/salvsync-debug
+%{_sbindir}/state_analyzer
+%{_sbindir}/afsd.fuse
 %{_sbindir}/bos_util
 %{_sbindir}/butc
 %{_sbindir}/fms
 %{_sbindir}/fstrace
 %{_sbindir}/kas
 %{_sbindir}/read_tape
-%{_sbindir}/restorevol
 %{_sbindir}/rxdebug
 %{_sbindir}/uss
 %{_sbindir}/vos
+%{_datadir}/%{name}/
 %{_mandir}/man1/afsmonitor.1*
 %{_mandir}/man1/fs.1*
 %{_mandir}/man1/klog.1*
