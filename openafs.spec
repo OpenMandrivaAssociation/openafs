@@ -7,6 +7,7 @@
 %define major   1
 %define libname     %mklibname %{name} %{major}
 %define develname	%mklibname %{name} -d
+%define stdevelname	%mklibname %{name} -d -s
 %define _requires_exceptions libafsrpc.so
 
 Name:           %{name}
@@ -75,7 +76,7 @@ This package contains the libraries needed to run programs dynamically
 linked with %{name}.
 
 %package -n %{develname}
-Summary:    Static libraries and header files for %{name}
+Summary:    Libraries and header files for %{name}
 Group:      Development/C
 Requires:	%{libname} = %{version}-%{release}
 Provides:	%{name}-devel = %{version}-%{release}
@@ -86,6 +87,18 @@ Conflicts:  %mklibname -d rplay
 %description -n	%{develname}
 This package contains the static development libraries and headers needed
 to compile applications linked with OpenAFS libraries.
+
+
+%package -n %{stdevelname}
+Summary:    Static libraries and header files for %{name}
+Group:      Development/C
+Requires:	%{libname} = %{version}-%{release}
+Provides:	%{name}-devel-static = %{version}-%{release}
+
+%description -n	%{stdevelname}
+This package contains the static development libraries and headers needed
+to compile applications linked with OpenAFS libraries.
+
 
 %package -n dkms-%{module}
 Summary:        DKMS-ready kernel source for AFS distributed filesystem
@@ -137,7 +150,6 @@ make all_nolibafs
 make libafs_tree
 
 %install
-rm -rf %{buildroot}
 make install_nolibafs DESTDIR=%{buildroot}
 
 # cache
@@ -218,9 +230,6 @@ perl -pi -e 's|%{_builddir}/%{name}-%{version}/src|../..|' \
 touch %{buildroot}%{_sysconfdir}/openafs/ThisCell
 chmod 644 %{buildroot}%{_sysconfdir}/openafs/ThisCell
 
-%clean
-rm -rf %{buildroot}
-
 %post client
 %_post_service %{name}
 if [ ! -e /afs ]; then
@@ -239,7 +248,6 @@ dkms install -m %{module} -v %{dkms_version} --rpm_safe_upgrade
 dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 
 %files
-%defattr(-,root,root,-)
 %doc README NEWS src/LICENSE
 %{_bindir}/afs_compile_et
 %{_bindir}/afsmonitor
@@ -299,9 +307,8 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_mandir}/man1/kpasswd.afs.1*
 
 %files client
-%defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/%{name}
-%config(noreplace) %ghost %{_sysconfdir}/%{name}/ThisCell
+#% config(noreplace) %ghost %{_sysconfdir}/%{name}/ThisCell
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initrddir}/%{name}
 %{_bindir}/cmdebug
@@ -311,7 +318,6 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 /var/cache/%{name}
 
 %files server
-%defattr(-,root,root)
 %{_initrddir}/%{name}-server
 %{_sbindir}/bosserver
 %{_sbindir}/ka-forwarder
@@ -337,11 +343,12 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_mandir}/man8/volinfo.8*
 
 %files -n %{libname}
-%defattr(-,root,root)
 %{_libdir}/*.so.*
 
+%files -n %{stdevelname}
+%{_libdir}/*.a
+
 %files -n %{develname}
-%defattr(-,root,root)
 
 %multiarch %{multiarch_bindir}/rxgen
 
@@ -359,15 +366,12 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %multiarch %{multiarch_includedir}/afs
 
 %{_libdir}/*.so
-%{_libdir}/*.a
 %{_libdir}/afs
 
 %files -n dkms-%{module}
-%defattr(-,root,root)
 %{_prefix}/src/%{module}-%{dkms_version}
 
 %files doc
-%defattr(-,root,root)
 %doc doc/LICENSE doc/pdf doc/txt doc/examples
 %{_mandir}/man?/*
 %exclude %{_mandir}/man1/afsmonitor.1*
