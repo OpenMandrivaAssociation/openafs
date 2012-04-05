@@ -259,6 +259,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_bindir}/klog.krb
 %{_bindir}/klog.krb5
 %{_bindir}/knfs
+%{_bindir}/afsio
 %{_bindir}/kpasswd.afs
 %{_bindir}/kpwvalid
 %{_bindir}/livesys
