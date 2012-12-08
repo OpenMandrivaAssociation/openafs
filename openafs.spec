@@ -1,18 +1,19 @@
-
-%define name    openafs
-%define version 1.6.1
-%define release 3
 %define dkms_version %{version}-%{release}
 %define module  libafs
 %define major   1
 %define libname     %mklibname %{name} %{major}
 %define develname	%mklibname %{name} -d
 %define stdevelname	%mklibname %{name} -d -s
-%define _requires_exceptions libafsrpc.so
 
-Name:           %{name}
-Version:        %{version}
-Release:        %{release}
+%if %{_use_internal_dependency_generator}
+%define __noautoreq 'libafsrpc.so'
+%else
+%define _requires_exceptions libafsrpc.so
+%endif
+
+Name:           openafs
+Version:        1.6.1
+Release:        2
 Summary:        OpenAFS distributed filesystem
 Group:          Networking/Other
 License:        IBM
@@ -20,17 +21,22 @@ URL:            http://openafs.org/
 Source0:        http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-src.tar.bz2
 Source1:        http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-doc.tar.bz2
 Source2:        http://grand.central.org/dl/cellservdb/CellServDB
-Source3:        openafs.init
+Source3:        openafs-client.service
 Source4:        openafs.config
-Source5:        openafs-server.init
+Source5:        openafs-server.service
+Source6:        afs.conf
 BuildRequires:  pam-devel
 BuildRequires:  ncurses-devel
 BuildRequires:  flex
+BuildRequires:  pkgconfig(fuse)
 BuildRequires:  bison
 BuildRequires:  krb5-devel
 Requires:       kmod(libafs)
 Conflicts:      krbafs-utils
 Conflicts:      coda-debug-backup
+Patch0:		openafs-1.6.1-afsd-sys-resource-h.patch
+Patch1:		openafs-1.6.1-int31-partsize.patch
+Patch2:		osi_vfsops-linux-3.5.patch
 
 %description
 AFS is a distributed filesystem allowing cross-platform sharing of files
@@ -125,15 +131,12 @@ This packages provides the documentation for OpenAFS.
 %prep
 %setup -q -T -b 0
 %setup -q -T -D -b 1
-#chmod 644 doc/html/QuickStartWindows/*.htm
-
-#aclocal -I src/cf
-#autoconf
-#autoconf configure-libafs.in > configure-libafs
-#chmod +x configure-libafs
-#autoheader
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 %build
+./regen.sh
 %serverbuild
 %ifarch x86_64
 %define sysname amd64_linux26
@@ -160,11 +163,11 @@ install -m 755 -d %{buildroot}%{_sysconfdir}/%{name}
 install -m 644 %{SOURCE2}  %{buildroot}%{_sysconfdir}/%{name}/CellServDB
 
 # init script
-install -m 755 -d %{buildroot}%{_initrddir}
+install -m 755 -d %{buildroot}%{_unitdir}
 install -m 755 -d %{buildroot}%{_sysconfdir}/sysconfig
-install -m 755 %{SOURCE3} %{buildroot}%{_initrddir}/%{name}
-install -m 755 %{SOURCE5} %{buildroot}%{_initrddir}/%{name}-server
-install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
+install -m 755 %{SOURCE3} %{buildroot}%{_unitdir}/%{name}-client.service
+install -m 755 %{SOURCE5} %{buildroot}%{_unitdir}/%{name}-server.service
+install -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 
 # kernel module
 install -d -m 755 %{buildroot}%{_prefix}/src
@@ -230,6 +233,9 @@ perl -pi -e 's|%{_builddir}/%{name}-%{version}/src|../..|' \
 touch %{buildroot}%{_sysconfdir}/openafs/ThisCell
 chmod 644 %{buildroot}%{_sysconfdir}/openafs/ThisCell
 
+# To avoid unstripped-binary-or-object rpmlint error
+chmod 0755 %{buildroot}%{_libdir}/*.so.*
+
 %post client
 %_post_service %{name}
 if [ ! -e /afs ]; then
@@ -279,7 +285,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_sbindir}/fssync-debug
 %{_sbindir}/salvsync-debug
 %{_sbindir}/state_analyzer
-#% {_sbindir}/afsd.fuse
+%{_sbindir}/afsd.fuse
 %{_sbindir}/bos_util
 %{_sbindir}/butc
 %{_sbindir}/fms
@@ -311,7 +317,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %config(noreplace) %{_sysconfdir}/%{name}
 #% config(noreplace) %ghost %{_sysconfdir}/%{name}/ThisCell
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
-%{_initrddir}/%{name}
+%{_unitdir}/%{name}-client.service
 %{_bindir}/cmdebug
 %{_bindir}/up.afs
 %{_sbindir}/afsd
@@ -319,7 +325,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 /var/cache/%{name}
 
 %files server
-%{_initrddir}/%{name}-server
+%{_unitdir}/%{name}-server.service
 %{_sbindir}/bosserver
 %{_sbindir}/ka-forwarder
 %{_sbindir}/kadb_check
