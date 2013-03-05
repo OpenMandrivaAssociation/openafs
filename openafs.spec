@@ -1,9 +1,8 @@
 %define dkms_version %{version}-%{release}
 %define module  libafs
-%define major   1
-%define libname     %mklibname %{name} %{major}
-%define develname	%mklibname %{name} -d
-%define stdevelname	%mklibname %{name} -d -s
+%define major	1
+%define libname	%mklibname %{name} %{major}
+%define devname	%mklibname %{name} -d
 
 %if %{_use_internal_dependency_generator}
 %define __noautoreq 'libafsrpc.so'
@@ -11,13 +10,13 @@
 %define _requires_exceptions libafsrpc.so
 %endif
 
+Summary:        OpenAFS distributed filesystem
 Name:           openafs
 Version:        1.6.1
 Release:        2
-Summary:        OpenAFS distributed filesystem
 Group:          Networking/Other
 License:        IBM
-URL:            http://openafs.org/
+Url:            http://openafs.org/
 Source0:        http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-src.tar.bz2
 Source1:        http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-doc.tar.bz2
 Source2:        http://grand.central.org/dl/cellservdb/CellServDB
@@ -25,18 +24,20 @@ Source3:        openafs-client.service
 Source4:        openafs.config
 Source5:        openafs-server.service
 Source6:        afs.conf
-BuildRequires:  pam-devel
-BuildRequires:  ncurses-devel
-BuildRequires:  flex
-BuildRequires:  pkgconfig(fuse)
-BuildRequires:  bison
-BuildRequires:  krb5-devel
-Requires:       kmod(libafs)
-Conflicts:      krbafs-utils
-Conflicts:      coda-debug-backup
 Patch0:		openafs-1.6.1-afsd-sys-resource-h.patch
 Patch1:		openafs-1.6.1-int31-partsize.patch
 Patch2:		osi_vfsops-linux-3.5.patch
+
+BuildRequires:  bison
+BuildRequires:  flex
+BuildRequires:  krb5-devel
+BuildRequires:  pam-devel
+BuildRequires:  pkgconfig(fuse)
+BuildRequires:  pkgconfig(libtirpc)
+BuildRequires:  pkgconfig(ncurses)
+Requires:       kmod(libafs)
+Conflicts:      krbafs-utils
+Conflicts:      coda-debug-backup
 
 %description
 AFS is a distributed filesystem allowing cross-platform sharing of files
@@ -81,30 +82,15 @@ Group:          System/Libraries
 This package contains the libraries needed to run programs dynamically
 linked with %{name}.
 
-%package -n %{develname}
+%package -n %{devname}
 Summary:    Libraries and header files for %{name}
 Group:      Development/C
 Requires:	%{libname} = %{version}-%{release}
 Provides:	%{name}-devel = %{version}-%{release}
-Obsoletes:  %mklibname -d %name 1
-Conflicts:  %mklibname -d lwp 2
-Conflicts:  %mklibname -d rplay
 
-%description -n	%{develname}
-This package contains the static development libraries and headers needed
+%description -n	%{devname}
+This package contains the development libraries and headers needed
 to compile applications linked with OpenAFS libraries.
-
-
-%package -n %{stdevelname}
-Summary:    Static libraries and header files for %{name}
-Group:      Development/C
-Requires:	%{libname} = %{version}-%{release}
-Provides:	%{name}-devel-static = %{version}-%{release}
-
-%description -n	%{stdevelname}
-This package contains the static development libraries and headers needed
-to compile applications linked with OpenAFS libraries.
-
 
 %package -n dkms-%{module}
 Summary:        DKMS-ready kernel source for AFS distributed filesystem
@@ -145,6 +131,7 @@ This packages provides the documentation for OpenAFS.
 %endif
 
 %configure2_5x \
+	--disable-static \
 	--disable-kernel-module \
 	--with-afs-sysname=%{sysname} \
 	--with-krb5-conf=%{_bindir}/krb5-config
@@ -235,6 +222,8 @@ chmod 644 %{buildroot}%{_sysconfdir}/openafs/ThisCell
 
 # To avoid unstripped-binary-or-object rpmlint error
 chmod 0755 %{buildroot}%{_libdir}/*.so.*
+
+rm -f %{buildroot}%{_libdir}/*.a
 
 %post client
 %_post_service %{name}
@@ -350,12 +339,9 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_mandir}/man8/volinfo.8*
 
 %files -n %{libname}
-%{_libdir}/*.so.*
+%{_libdir}/*.so.%{major}*
 
-%files -n %{stdevelname}
-%{_libdir}/*.a
-
-%files -n %{develname}
+%files -n %{devname}
 
 %multiarch %{multiarch_bindir}/rxgen
 
