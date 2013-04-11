@@ -4,6 +4,8 @@
 %define libname	%mklibname %{name} %{major}
 %define devname	%mklibname %{name} -d
 
+%define debug_package %{nil}
+
 %if %{_use_internal_dependency_generator}
 %define __noautoreq 'libafsrpc.so'
 %else
