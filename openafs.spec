@@ -13,7 +13,7 @@
 Summary:        OpenAFS distributed filesystem
 Name:           openafs
 Version:        1.6.1
-Release:        2
+Release:        3
 Group:          Networking/Other
 License:        IBM
 Url:            http://openafs.org/
@@ -343,11 +343,11 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 
 %files -n %{devname}
 
-%multiarch %{multiarch_bindir}/rxgen
+%{multiarch_bindir}/rxgen
 
-%multiarch %{multiarch_bindir}/xstat_cm_test
+%{multiarch_bindir}/xstat_cm_test
 
-%multiarch %{multiarch_bindir}/xstat_fs_test
+%{multiarch_bindir}/xstat_fs_test
 
 %{_bindir}/rxgen
 %{_bindir}/xstat_cm_test
@@ -356,7 +356,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_includedir}/afs
 %{_includedir}/rx
 
-%multiarch %{multiarch_includedir}/afs
+%{multiarch_includedir}/afs
 
 %{_libdir}/*.so
 %{_libdir}/afs
