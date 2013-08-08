@@ -1,9 +1,3 @@
-%define dkms_version %{version}-%{release}
-%define module  libafs
-%define major	1
-%define libname	%mklibname %{name} %{major}
-%define devname	%mklibname %{name} -d
-
 %define debug_package %{nil}
 
 %if %{_use_internal_dependency_generator}
@@ -12,34 +6,41 @@
 %define _requires_exceptions libafsrpc.so
 %endif
 
-Summary:        OpenAFS distributed filesystem
-Name:           openafs
-Version:        1.6.1
-Release:        3
-Group:          Networking/Other
-License:        IBM
-Url:            http://openafs.org/
-Source0:        http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-src.tar.bz2
-Source1:        http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-doc.tar.bz2
-Source2:        http://grand.central.org/dl/cellservdb/CellServDB
-Source3:        openafs-client.service
-Source4:        openafs.config
-Source5:        openafs-server.service
-Source6:        afs.conf
+%define dkms_version %{version}-%{release}
+%define module  libafs
+%define major	1
+%define libname	%mklibname afsrpc %{major}
+%define devname	%mklibname %{name} -d
+
+
+Summary:	OpenAFS distributed filesystem
+Name:		openafs
+Version:	1.6.1
+Release:	3
+Group:		Networking/Other
+License:	IBM
+Url:		http://openafs.org/
+Source0:	http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-src.tar.bz2
+Source1:	http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-doc.tar.bz2
+Source2:	http://grand.central.org/dl/cellservdb/CellServDB
+Source3:	openafs-client.service
+Source4:	openafs.config
+Source5:	openafs-server.service
+Source6:	afs.conf
 Patch0:		openafs-1.6.1-afsd-sys-resource-h.patch
 Patch1:		openafs-1.6.1-int31-partsize.patch
 Patch2:		osi_vfsops-linux-3.5.patch
 
-BuildRequires:  bison
-BuildRequires:  flex
-BuildRequires:  krb5-devel
-BuildRequires:  pam-devel
-BuildRequires:  pkgconfig(fuse)
-BuildRequires:  pkgconfig(libtirpc)
-BuildRequires:  pkgconfig(ncurses)
-Requires:       kmod(libafs)
-Conflicts:      krbafs-utils
-Conflicts:      coda-debug-backup
+BuildRequires:	bison
+BuildRequires:	flex
+BuildRequires:	krb5-devel
+BuildRequires:	pam-devel
+BuildRequires:	pkgconfig(fuse)
+BuildRequires:	pkgconfig(libtirpc)
+BuildRequires:	pkgconfig(ncurses)
+Requires:	kmod(libafs)
+Conflicts:	krbafs-utils
+Conflicts:	coda-debug-backup
 
 %description
 AFS is a distributed filesystem allowing cross-platform sharing of files
@@ -50,10 +51,10 @@ This package provides common files shared across all the various
 OpenAFS packages but are not necessarily tied to a client or server.
 
 %package client
-Summary:        OpenAFS filesystem client
-Group:          Networking/Other
-Requires:       %{name} = %{version}
-Requires(post,preun): rpm-helper
+Summary:	OpenAFS filesystem client
+Group:		Networking/Other
+Requires:	%{name} = %{version}
+Requires(post,preun):	rpm-helper
 
 %description client
 AFS is a distributed filesystem allowing cross-platform sharing of files
@@ -64,9 +65,9 @@ This package provides basic client support to mount and manipulate
 AFS.
 
 %package server
-Summary:        OpenAFS filesystem server
-Group:          Networking/Other
-Requires:       %{name}-client = %{version}
+Summary:	OpenAFS filesystem server
+Group:		Networking/Other
+Requires:	%{name}-client = %{version}
 
 %description server
 AFS is a distributed filesystem allowing cross-platform sharing of files
@@ -77,16 +78,16 @@ This package provides basic server support to host files in an AFS
 cell.
 
 %package -n %{libname}
-Summary:        Libraries for %{name}
-Group:          System/Libraries
+Summary:	Libraries for %{name}
+Group:		System/Libraries
 
 %description -n	%{libname}
 This package contains the libraries needed to run programs dynamically
 linked with %{name}.
 
 %package -n %{devname}
-Summary:    Libraries and header files for %{name}
-Group:      Development/C
+Summary:	Libraries and header files for %{name}
+Group:		Development/C
 Requires:	%{libname} = %{version}-%{release}
 Provides:	%{name}-devel = %{version}-%{release}
 
@@ -95,22 +96,22 @@ This package contains the development libraries and headers needed
 to compile applications linked with OpenAFS libraries.
 
 %package -n dkms-%{module}
-Summary:        DKMS-ready kernel source for AFS distributed filesystem
-Group:          Development/Kernel
-Obsoletes:      openafs-kernel-source
-Provides:       openafs-kernel-source
-Requires(pre):  dkms
-Requires(pre):  flex
-Requires(post): dkms
-Provides:       kmod(libafs)
+Summary:	DKMS-ready kernel source for AFS distributed filesystem
+Group:		Development/Kernel
+Obsoletes:	openafs-kernel-source
+Provides:	openafs-kernel-source
+Requires(pre):	dkms
+Requires(pre):	flex
+Requires(post):	dkms
+Provides:	kmod(libafs)
 
 %description -n dkms-%{module}
 This package provides the AFS kernel module.
 
 %package doc
-Summary:        OpenAFS doc
-Group:          Networking/Other
-Conflicts:      up
+Summary:	OpenAFS doc
+Group:		Networking/Other
+Conflicts:	up
 
 %description doc
 This packages provides the documentation for OpenAFS.
@@ -133,6 +134,7 @@ This packages provides the documentation for OpenAFS.
 %endif
 
 %configure2_5x \
+	--enable-shared \
 	--disable-static \
 	--disable-kernel-module \
 	--with-afs-sysname=%{sysname} \
@@ -341,27 +343,23 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_mandir}/man8/volinfo.8*
 
 %files -n %{libname}
-%{_libdir}/*.so.%{major}*
+%{_libdir}/libafsrpc.so.%{major}*
+%{_libdir}/libafsauthent.so.%{major}*
+%{_libdir}/libkopenafs.so.%{major}*
 
 %files -n %{devname}
-
 %{multiarch_bindir}/rxgen
-
 %{multiarch_bindir}/xstat_cm_test
-
 %{multiarch_bindir}/xstat_fs_test
-
 %{_bindir}/rxgen
 %{_bindir}/xstat_cm_test
 %{_bindir}/xstat_fs_test
 %{_includedir}/*.h
 %{_includedir}/afs
 %{_includedir}/rx
-
 %{multiarch_includedir}/afs
-
 %{_libdir}/*.so
-%{_libdir}/afs
+%{_libdir}/afs/*.a
 
 %files -n dkms-%{module}
 %{_prefix}/src/%{module}-%{dkms_version}
@@ -394,3 +392,4 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %exclude %{_mandir}/man8/vldb_check.8*
 %exclude %{_mandir}/man8/voldump.8*
 %exclude %{_mandir}/man8/volinfo.8*
+
