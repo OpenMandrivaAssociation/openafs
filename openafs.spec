@@ -15,8 +15,8 @@
 
 Summary:	OpenAFS distributed filesystem
 Name:		openafs
-Version:	1.6.1
-Release:	3
+Version:	1.6.5
+Release:	1
 Group:		Networking/Other
 License:	IBM
 Url:		http://openafs.org/
@@ -28,8 +28,6 @@ Source4:	openafs.config
 Source5:	openafs-server.service
 Source6:	afs.conf
 Patch0:		openafs-1.6.1-afsd-sys-resource-h.patch
-Patch1:		openafs-1.6.1-int31-partsize.patch
-Patch2:		osi_vfsops-linux-3.5.patch
 
 BuildRequires:	bison
 BuildRequires:	flex
@@ -121,8 +119,6 @@ This packages provides the documentation for OpenAFS.
 %setup -q -T -b 0
 %setup -q -T -D -b 1
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
 ./regen.sh
