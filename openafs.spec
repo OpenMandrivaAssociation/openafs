@@ -269,6 +269,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_bindir}/udebug
 %{_bindir}/unlog
 %{_bindir}/restorevol
+%{_libexecdir}/%{name}/*
 %{_sbindir}/backup
 %{_sbindir}/dafssync-debug
 %{_sbindir}/fssync-debug
