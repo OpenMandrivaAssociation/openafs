@@ -16,7 +16,7 @@
 Summary:	OpenAFS distributed filesystem
 Name:		openafs
 Version:	1.6.5
-Release:	5
+Release:	6
 Group:		Networking/Other
 License:	IBM
 Url:		http://openafs.org/
