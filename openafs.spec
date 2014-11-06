@@ -16,7 +16,7 @@
 Summary:	OpenAFS distributed filesystem
 Name:		openafs
 Version:	1.6.5
-Release:	7
+Release:	8
 Group:		Networking/Other
 License:	IBM
 Url:		http://openafs.org/
@@ -129,7 +129,7 @@ This packages provides the documentation for OpenAFS.
 %define sysname %{_arch}_linux26
 %endif
 
-%configure2_5x \
+%configure \
 	--enable-shared \
 	--disable-static \
 	--disable-kernel-module \
