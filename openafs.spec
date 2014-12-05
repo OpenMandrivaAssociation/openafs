@@ -16,7 +16,7 @@
 Summary:	OpenAFS distributed filesystem
 Name:		openafs
 Version:	1.6.5
-Release:	8
+Release:	9
 Group:		Networking/Other
 License:	IBM
 Url:		http://openafs.org/
@@ -328,7 +328,7 @@ dkms remove -m %{module} -v %{dkms_version} --rpm_safe_upgrade --all ||:
 %{_sbindir}/voldump
 %{_sbindir}/volinfo
 %{_sbindir}/vsys
-%{_libdir}/openafs
+%{_libexecdir}/openafs
 %{_mandir}/man8/bosserver.8*
 %{_mandir}/man8/kadb_check.8*
 %{_mandir}/man8/kdb.8*
