@@ -19,7 +19,7 @@ Version:	1.6.5
 Release:	12
 Group:		Networking/Other
 License:	IBM
-Url:		http://openafs.org/
+Url:		https://openafs.org/
 Source0:	http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-src.tar.bz2
 Source1:	http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-doc.tar.bz2
 Source2:	http://grand.central.org/dl/cellservdb/CellServDB
