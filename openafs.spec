@@ -29,6 +29,11 @@ Source5:	openafs-server.service
 Source6:	afs.conf
 Patch0:		openafs-1.6.1-afsd-sys-resource-h.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	krb5-devel
